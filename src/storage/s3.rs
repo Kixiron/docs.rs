@@ -1,13 +1,16 @@
 use super::Blob;
 use chrono::{DateTime, NaiveDateTime, Utc};
 use failure::Error;
-use futures::Future;
-use log::{error, warn};
+use futures_util::{
+    compat::Future01CompatExt,
+    future::TryFutureExt,
+    stream::{FuturesUnordered, TryStreamExt},
+};
+use log::warn;
 use rusoto_core::region::Region;
 use rusoto_credential::DefaultCredentialsProvider;
 use rusoto_s3::{GetObjectRequest, PutObjectRequest, S3Client, S3};
-use std::convert::TryInto;
-use std::io::Read;
+use std::{convert::TryInto, io::Read};
 use tokio::runtime::Runtime;
 
 #[cfg(test)]
@@ -32,15 +35,16 @@ impl<'a> S3Backend<'a> {
         }
     }
 
-    pub(super) fn get(&self, path: &str) -> Result<Blob, Error> {
-        let res = self
-            .client
-            .get_object(GetObjectRequest {
-                bucket: self.bucket.to_string(),
-                key: path.into(),
-                ..Default::default()
-            })
-            .sync()?;
+    pub(super) fn get(&mut self, path: &str) -> Result<Blob, Error> {
+        let res = self.runtime.block_on(
+            self.client
+                .get_object(GetObjectRequest {
+                    bucket: self.bucket.to_string(),
+                    key: path.into(),
+                    ..Default::default()
+                })
+                .compat(),
+        )?;
 
         let mut b = res.body.unwrap().into_blocking_read();
         let mut content = Vec::with_capacity(
@@ -61,12 +65,10 @@ impl<'a> S3Backend<'a> {
     }
 
     pub(super) fn store_batch(&mut self, batch: &[Blob]) -> Result<(), Error> {
-        use futures::stream::FuturesUnordered;
-        use futures::stream::Stream;
         let mut attempts = 0;
 
         loop {
-            let mut futures = FuturesUnordered::new();
+            let futures = FuturesUnordered::new();
             for blob in batch {
                 futures.push(
                     self.client
@@ -77,18 +79,21 @@ impl<'a> S3Backend<'a> {
                             content_type: Some(blob.mime.clone()),
                             ..Default::default()
                         })
-                        .inspect(|_| {
+                        .compat()
+                        .map_ok(|_| {
                             crate::web::metrics::UPLOADED_FILES_TOTAL.inc_by(1);
                         }),
                 );
             }
             attempts += 1;
 
-            match self.runtime.block_on(futures.map(drop).collect()) {
+            let result: Result<Vec<()>, _> = self.runtime.block_on(futures.try_collect());
+            match result {
                 // this batch was successful, start another batch if there are still more files
-                Ok(_) => break,
+                Ok(..) => break,
                 Err(err) => {
-                    error!("failed to upload to s3: {:?}", err);
+                    log::error!("Error uploading file to S3: {:?}", err);
+
                     // if a futures error occurs, retry the batch
                     if attempts > 2 {
                         panic!("failed to upload 3 times, exiting");
@@ -96,6 +101,7 @@ impl<'a> S3Backend<'a> {
                 }
             }
         }
+
         Ok(())
     }
 }

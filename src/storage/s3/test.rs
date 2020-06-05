@@ -23,14 +23,16 @@ impl TestS3 {
         let bucket = Box::leak(bucket.into_boxed_str());
         TestS3(RefCell::new(S3Backend::new(client, bucket)))
     }
+
     pub(crate) fn upload(&self, blobs: &[Blob]) -> Result<(), Error> {
         self.0.borrow_mut().store_batch(blobs)
     }
+
     pub(crate) fn assert_404(&self, path: &'static str) {
         use rusoto_core::RusotoError;
         use rusoto_s3::GetObjectError;
 
-        let err = self.0.borrow().get(path).unwrap_err();
+        let err = self.0.borrow_mut().get(path).unwrap_err();
         match err
             .downcast_ref::<RusotoError<GetObjectError>>()
             .expect("wanted GetObject")
@@ -40,8 +42,9 @@ impl TestS3 {
             x => panic!("wrong error: {:?}", x),
         };
     }
+
     pub(crate) fn assert_blob(&self, blob: &Blob, path: &str) {
-        let actual = self.0.borrow().get(path).unwrap();
+        let actual = self.0.borrow_mut().get(path).unwrap();
         assert_blob_eq(blob, &actual);
     }
 }
