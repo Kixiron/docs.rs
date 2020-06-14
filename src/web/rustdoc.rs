@@ -23,7 +23,6 @@ struct RustdocPage {
     body: String,
     body_class: String,
     name: String,
-    full: String,
     version: String,
     description: Option<String>,
     crate_details: Option<CrateDetails>,
@@ -38,7 +37,6 @@ impl Serialize for RustdocPage {
         state.serialize_field("rustdoc_head", &self.head)?;
         state.serialize_field("rustdoc_body", &self.body)?;
         state.serialize_field("rustdoc_body_class", &self.body_class)?;
-        state.serialize_field("rustdoc_full", &self.full)?;
         state.serialize_field("rustdoc_status", &true)?;
         state.serialize_field("name", &self.name)?;
         state.serialize_field("version", &self.version)?;
@@ -310,17 +308,22 @@ pub fn rustdoc_html_server_handler(req: &mut Request) -> IronResult<Response> {
         return Ok(file.serve());
     }
 
-    let file_content = ctry!(String::from_utf8(file.0.content));
     // Extract the head and body of the rustdoc file so that we can insert it into our own html
-    let (head, body, mut body_class) = ctry!(utils::extract_head_and_body(&file_content));
+    let extracted = ctry!(utils::extract_head_and_body(&file.0.content));
 
     // Add the `rustdoc` classes to the html body
-    if body_class.is_empty() {
-        body_class = "rustdoc container-rustdoc".to_string();
-    } else {
+    let body_class = extracted
+        .map_body_class(|class| {
+            const CONTAINER: &str = " container-rustdoc";
+
+            let mut body_class = String::with_capacity(class.len() + CONTAINER.len());
+            body_class.push_str(class);
+            body_class.push_str(CONTAINER);
+
+            body_class
+        })
         // rustdoc adds its own "rustdoc" class to the body
-        body_class.push_str(" container-rustdoc");
-    }
+        .unwrap_or_else(|| "rustdoc container-rustdoc".to_string());
 
     let latest_release = crate_details.latest_release();
 
@@ -364,11 +367,10 @@ pub fn rustdoc_html_server_handler(req: &mut Request) -> IronResult<Response> {
 
     // Build the page of documentation
     let content = RustdocPage {
-        head,
-        body,
+        head: extracted.head_node(),
+        body: extracted.body_node(),
         body_class,
         name,
-        full: file_content,
         version,
         crate_details: Some(crate_details),
         ..Default::default()
@@ -1415,7 +1417,6 @@ mod test {
             body: "<body><h1>idk</h1></body>".to_string(),
             body_class: "docsrs-body".to_string(),
             name: "rcc".to_string(),
-            full: "??".to_string(),
             version: "100.0.100".to_string(),
             description: Some("a Rust compiler in C. Wait, maybe the other way around".to_string()),
             crate_details: Some(CrateDetails::default_tester(time)),
@@ -1425,7 +1426,6 @@ mod test {
             "rustdoc_head": "<head><title>Whee</title></head>",
             "rustdoc_body": "<body><h1>idk</h1></body>",
             "rustdoc_body_class": "docsrs-body",
-            "rustdoc_full": "??",
             "rustdoc_status": true,
             "name": "rcc",
             "version": "100.0.100",
@@ -1440,7 +1440,6 @@ mod test {
             "rustdoc_head": "<head><title>Whee</title></head>",
             "rustdoc_body": "<body><h1>idk</h1></body>",
             "rustdoc_body_class": "docsrs-body",
-            "rustdoc_full": "??",
             "rustdoc_status": true,
             "name": "rcc",
             "version": "100.0.100",
@@ -1455,7 +1454,6 @@ mod test {
             "rustdoc_head": "<head><title>Whee</title></head>",
             "rustdoc_body": "<body><h1>idk</h1></body>",
             "rustdoc_body_class": "docsrs-body",
-            "rustdoc_full": "??",
             "rustdoc_status": true,
             "name": "rcc",
             "version": "100.0.100",
