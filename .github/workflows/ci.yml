@@ -39,7 +39,14 @@
                     "env": {
                         "POSTGRES_USER": "docsrs",
                         "POSTGRES_PASSWORD": "password"
-                    }
+                    },
+                    # Wait for postgres to start up
+                    "options": "
+                        --health-cmd pg_isready
+                        --health-interval 10s
+                        --health-timeout 5s
+                        --health-retries 5
+                    "
                 },
                 "minio": {
                     "image": "minio/minio",
@@ -177,10 +184,9 @@
 
         "style": {
             "name": "${{ matrix.tool }}",
-            "runs-on": "${{ matrix.os }}",
+            "runs-on": "ubuntu-latest",
             "strategy": {
                 "matrix": {
-                    "os": ["ubuntu-latest"],
                     # Reduce duplication since all the tools run the same way
                     "tool": ["clippy", "rustfmt"]
                 },
@@ -214,7 +220,7 @@
                             ~/.cargo/git
                             ~/.cargo/registry
                         ",
-                        "key": "${{ matrix.tool }}-${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}"
+                        "key": "${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}"
                     }
                 },
 
@@ -229,7 +235,7 @@
                 },
                 {
                     "name": "Rustfmt",
-                    "uses": "actions-rs/toolchain@v1",
+                    "uses": "actions-rs/cargo@v1",
                     "with": {
                         "command": "fmt",
                         "args": "-- --check"
