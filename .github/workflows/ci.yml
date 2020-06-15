@@ -1,89 +1,241 @@
----
-on: [push, pull_request]
-name: CI
+{
+    "$schema": "https://json.schemastore.org/github-workflow",
 
-env:
-  RUST_BACKTRACE: 1
+    "name": "CI",
+    "on": ["push", "pull_request"],
 
-jobs:
-  test:
-    name: Test
-    runs-on: ubuntu-latest
+    "env": {
+        "RUST_BACKTRACE": "1",
+        "CRATESFYI_PREFIX": "ignored/cratesfyi-prefix",
+        "CRATESFYI_DATABASE_URL": "postgresql://docsrs:password@localhost",
+        "RUST_LOG": "cratesfyi,rustwide=info",
+        "AWS_ACCESS_KEY_ID": "docsrs",
+        "AWS_SECRET_ACCESS_KEY": "secret_key",
+        "S3_ENDPOINT": "http://localhost:9000"
+    },
 
-    strategy:
-      fail-fast: false
+    "jobs": {
+        "test": {
+            "name": "Test",
+            "runs-on": "${{ matrix.os }}",
+            "strategy": {
+                "matrix": {
+                    "os": ["ubuntu-latest"],
+                },
+                # Don't cancel all jobs when one fails
+                "fail-fast": false,
+            },
 
-    steps:
-      - uses: actions/checkout@master
-        with:
-          fetch-depth: 2
+            # Run Postgres and Minio as service containers
+            "services": {
+                "postgres": {
+                    "image": "postgres",
+                    "ports": [5432, 5432],
+                    "volumes": [
+                        "postgres-data:/var/lib/postgresql/data",
+                        "postgres:/docker-entrypoint-initdb.d"
+                    ],
+                    "env": {
+                        "POSTGRES_USER": "docsrs",
+                        "POSTGRES_PASSWORD": "password"
+                    }
+                },
+                "minio": {
+                    "image": "minio/minio",
+                    "ports": [9000, 9000],
+                    "volumes": ["minio-data:/data"],
+                    "env": {
+                        "MINIO_ACCESS_KEY": "${{ env.AWS_KEY_ID }}",
+                        "MINIO_SECRET_KEY": "${{ env.AWS_ACCESS_KEY }}"
+                    }
+                }
+            },
 
-      - name: Install stable Rust
-        run: rustup update stable && rustup default stable
+            "steps": [
+                {
+                    "name": "Checkout",
+                    "uses": "actions/checkout@v2"
+                },
 
-      - name: Set rustc version
-        run: echo "::set-env name=CURRENT_RUSTC_VERSION::$(rustc -V)"
+                {
+                    "name": "Install Rust",
+                    "uses": "actions-rs/toolchain@v1",
+                    "with": {
+                        "profile": "minimal",
+                        "toolchain": "stable",
+                        "override": true,
+                    },
+                },
 
-      # Caching
-      - name: Cache Cargo directories
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/bin
-            ~/.cargo/git
-            ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - name: Cache Cargo Build
-        uses: actions/cache@v2
-        with:
-          path: target
-          key: ${{ runner.os }}-cargo-build-target-${{ env.CURRENT_RUSTC_VERSION }}-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-build-target-${{ env.CURRENT_RUSTC_VERSION }}-
+                # Install cargo-sweep for cleaning the build cache
+                {
+                    "name": "Install crates",
+                    "uses": "actions-rs/cargo@v1",
+                    "with": {
+                        "command": "install",
+                        "args": "cargo-sweep"
+                    }
+                },
 
-      - name: Launch the postgres and min.io images
-        run: |
-          cp .env.sample .env
-          . .env
-          mkdir -p ${CRATESFYI_PREFIX}/public-html
-          docker-compose up -d db s3
-          # Give the database enough time to start up
-          sleep 5
-          # Make sure the database is actually working
-          psql "${CRATESFYI_DATABASE_URL}"
+                {
+                    "name": "Cache cargo artifacts",
+                    "uses": "actions/cache@v2",
+                    "with": {
+                        "path": "
+                            ~/.cargo/bin
+                            ~/.cargo/git
+                            ~/.cargo/registry
+                        ",
+                        "key": "${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}"
+                    }
+                },
+                {
+                    "name": "Cache build artifacts",
+                    "uses": "actions/cache@v2",
+                    "with": {
+                        "path": "target",
+                        # Use the current rustc version hash as part of the cache key
+                        "key": "${{ runner.os }}-cargo-build-target-${{ steps.install-rust.outputs.rustc_hash }}-${{ hashFiles('**/Cargo.lock') }}"
+                    }
+                },
 
-      - name: Run rustfmt
-        run: cargo fmt -- --check
+                # Store the current state of the build cache so we can remove old artifacts later
+                {
+                    "name": "Prebuild sweep",
+                    "uses": "actions-rs/cargo@v1",
+                    "with": {
+                        "command": "sweep",
+                        "args": "--stamp",
+                    }
+                },
 
-      - name: Run clippy
-        run: cargo clippy --locked -- -D warnings
+                {
+                    "name": "Build",
+                    "uses": "actions-rs/cargo@v1",
+                    "with": {
+                        "command": "build",
+                        "args": "--locked"
+                    }
+                },
 
-      - name: Build docs.rs
-        run: cargo build --locked
+                {
+                    "name": "Run tests",
+                    "uses": "actions-rs/cargo@v1",
+                    "with": {
+                        "command": "test",
+                        "args": "--locked -- --test-threads=1"
+                    }
+                },
 
-      - name: Test docs.rs
-        run: cargo test --locked -- --test-threads=1
+                # Remove all build artifacts not involved in the most recent build
+                {
+                    "name": "Postbuild sweep",
+                    "uses": "actions-rs/cargo@v1",
+                    "with": {
+                        "command": "sweep",
+                        "args": "--file",
+                    }
+                },
+            ]
+        },
 
-      - name: Clean up the database
-        run: docker-compose down --volumes
+        "docker": {
+            "name": "Build docker image",
+            "runs-on": "${{ matrix.os }}",
+            "strategy": {
+                "matrix": {
+                    "os": ["ubuntu-latest"],
+                },
+                # Don't cancel all jobs when one fails
+                "fail-fast": false,
+            },
 
-  docker:
-    name: Docker
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-        with:
-          fetch-depth: 2
+            "steps": [
+                {
+                    "name": "Checkout",
+                    "uses": "actions/checkout@v2"
+                },
+                {
+                    "name": "Build image",
+                    "run": "docker build --tag docs-rs ."
+                },
+                {
+                    "name": "Upload image to ECR",
+                    "uses": "rust-lang/simpleinfra/github-actions/upload-docker-image@master",
+                    "with": {
+                        "image": "docs-rs",
+                        "repository": "staging-docs-rs",
+                        "region": "us-west-1",
+                        "aws_access_key_id": "${{ secrets.aws_access_key_id }}",
+                        "aws_secret_access_key": "${{ secrets.aws_secret_access_key }}"
+                    },
+                    "if": "github.ref == 'refs/heads/master'"
+                }
+            ]
+        },
 
-      - name: Build the Docker image
-        run: docker build -t docs-rs .
+        "style": {
+            "name": "${{ matrix.tool }}",
+            "runs-on": "${{ matrix.os }}",
+            "strategy": {
+                "matrix": {
+                    "os": ["ubuntu-latest"],
+                    # Reduce duplication since all the tools run the same way
+                    "tool": ["clippy", "rustfmt"]
+                },
+                # Don't cancel all jobs when one fails
+                "fail-fast": false,
+            },
 
-      - name: Upload the Docker image to ECR
-        uses: rust-lang/simpleinfra/github-actions/upload-docker-image@master
-        with:
-          image: docs-rs
-          repository: staging-docs-rs
-          region: us-west-1
-          aws_access_key_id: "${{ secrets.aws_access_key_id }}"
-          aws_secret_access_key: "${{ secrets.aws_secret_access_key }}"
-        if: github.ref == 'refs/heads/master'
+            "steps": [
+                {
+                    "name": "Checkout",
+                    "uses": "actions/checkout@v2"
+                },
+                # Install stable rust with clippy and rustfmt
+                {
+                    "uses": "actions-rs/toolchain@v1",
+                    "with": {
+                        "toolchain": "stable",
+                        "default": "minimal",
+                        "override": true,
+                        "components": "${{ matrix.tool }}"
+                    }
+                },
+
+                # Cache cargo artifacts
+                {
+                    "name": "Cache cargo artifacts",
+                    "uses": "actions/cache@v2",
+                    "with": {
+                        "path": "
+                            ~/.cargo/bin
+                            ~/.cargo/git
+                            ~/.cargo/registry
+                        ",
+                        "key": "${{ matrix.tool }}-${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}"
+                    }
+                },
+
+                {
+                    "name": "Clippy",
+                    "uses": "actions-rs/clippy-check@v1",
+                    "with": {
+                        "token": "${{ secrets.GITHUB_TOKEN }}",
+                        "args": "--locked -- -D warnings"
+                    },
+                    "if": "matrix.tool == 'clippy'"
+                },
+                {
+                    "name": "Rustfmt",
+                    "uses": "actions-rs/toolchain@v1",
+                    "with": {
+                        "command": "fmt",
+                        "args": "-- --check"
+                    },
+                    "if": "matrix.tool == 'rustfmt'"
+                }
+            ]
+        }
+    },
+}
