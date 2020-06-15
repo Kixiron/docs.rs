@@ -9,9 +9,7 @@
         "RUST_BACKTRACE": "1",
         "RUST_LOG": "cratesfyi,rustwide=info",
         "AWS_ACCESS_KEY_ID": "docsrs",
-        "AWS_SECRET_ACCESS_KEY": "secret_key",
-        "POSTGRES_USER": "docsrs",
-        "POSTGRES_PASSWORD": "password"
+        "AWS_SECRET_ACCESS_KEY": "secret_key"
     },
 
     "jobs": {
@@ -28,8 +26,8 @@
             "env": {
                 "CRATESFYI_PREFIX": "ignored/docsrs-prefix",
                 # Build the database and minio urls from environmental variables, using the ports that github selected for the containers
-                "CRATESFYI_DATABASE_URL": "postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@localhost:${{ jobs.services.postgres.ports[5432] }}",
-                "S3_ENDPOINT": "http://localhost:${{ jobs.services.minio.ports[9000] }}",
+                "CRATESFYI_DATABASE_URL": "postgresql://docsrs:password@localhost",
+                "S3_ENDPOINT": "http://localhost:9000",
             },
 
             # Run Postgres and Minio as service containers
@@ -42,8 +40,8 @@
                         "postgres:/docker-entrypoint-initdb.d"
                     ],
                     "env": {
-                        "POSTGRES_USER": "${{ env.POSTGRES_USER }}",
-                        "POSTGRES_PASSWORD": "${{ env.POSTGRES_PASSWORD }}"
+                        "POSTGRES_USER": "docsrs",
+                        "POSTGRES_PASSWORD": "password"
                     },
                     # Wait for postgres to start up
                     "options": "
