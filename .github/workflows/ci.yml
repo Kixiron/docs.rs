@@ -1,5 +1,6 @@
 {
-    "$schema": "https://json.schemastore.org/github-workflow",
+    # Uncomment the schema for intellisense while editing
+    # "$schema": "https://json.schemastore.org/github-workflow",
 
     "name": "CI",
     "on": ["push", "pull_request"],
