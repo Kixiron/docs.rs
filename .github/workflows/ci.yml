@@ -27,6 +27,7 @@
             },
             "env": {
                 "CRATESFYI_PREFIX": "ignored/cratesfyi-prefix",
+                # Build the database and minio urls from environmental variables, using the ports that github selected for the containers
                 "CRATESFYI_DATABASE_URL": "postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@localhost:${{ job.services.postgres.ports[5432] }}",
                 "S3_ENDPOINT": "http://localhost:${{ job.services.minio.ports[9000] }}",
             },
