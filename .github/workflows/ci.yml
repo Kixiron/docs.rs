@@ -7,12 +7,11 @@
 
     "env": {
         "RUST_BACKTRACE": "1",
-        "CRATESFYI_PREFIX": "ignored/cratesfyi-prefix",
-        "CRATESFYI_DATABASE_URL": "postgresql://docsrs:password@localhost",
         "RUST_LOG": "cratesfyi,rustwide=info",
         "AWS_ACCESS_KEY_ID": "docsrs",
         "AWS_SECRET_ACCESS_KEY": "secret_key",
-        "S3_ENDPOINT": "http://localhost:9000"
+        "POSTGRES_USER": "docsrs",
+        "POSTGRES_PASSWORD": "password"
     },
 
     "jobs": {
@@ -26,6 +25,11 @@
                 # Don't cancel all jobs when one fails
                 "fail-fast": false,
             },
+            "env": {
+                "CRATESFYI_PREFIX": "ignored/cratesfyi-prefix",
+                "CRATESFYI_DATABASE_URL": "postgresql://${{ env.POSTGRES_USER }}:${{ env.POSTGRES_PASSWORD }}@localhost:${{ job.services.postgres.ports[5432] }}",
+                "S3_ENDPOINT": "http://localhost:${{ job.services.minio.ports[9000] }}",
+            },
 
             # Run Postgres and Minio as service containers
             "services": {
@@ -37,8 +41,8 @@
                         "postgres:/docker-entrypoint-initdb.d"
                     ],
                     "env": {
-                        "POSTGRES_USER": "docsrs",
-                        "POSTGRES_PASSWORD": "password"
+                        "POSTGRES_USER": "${{ env.POSTGRES_USER }}",
+                        "POSTGRES_PASSWORD": "${{ env.POSTGRES_PASSWORD }}"
                     },
                     # Wait for postgres to start up
                     "options": "
