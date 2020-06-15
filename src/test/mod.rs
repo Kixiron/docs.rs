@@ -11,7 +11,7 @@ use reqwest::{
     Method,
 };
 use std::{
-    panic,
+    env, panic,
     sync::{Arc, Mutex, MutexGuard},
 };
 
@@ -120,8 +120,16 @@ impl TestEnvironment {
     }
 
     pub(crate) fn db(&self) -> &TestDatabase {
-        self.db
-            .get_or_init(|| TestDatabase::new().expect("failed to initialize the db"))
+        self.db.get_or_init(|| {
+            TestDatabase::new().unwrap_or_else(|err| {
+                panic!(
+                    "failed to initialize the db at the url '{}': {:?}",
+                    env::var("CRATESFYI_DATABASE_URL")
+                        .unwrap_or_else(|_| "<no database url provided>".to_owned()),
+                    err,
+                );
+            })
+        })
     }
 
     pub(crate) fn frontend(&self) -> &TestFrontend {

@@ -26,7 +26,7 @@
             "env": {
                 "CRATESFYI_PREFIX": "ignored/docsrs-prefix",
                 # Build the database and minio urls from environmental variables, using the ports that github selected for the containers
-                "CRATESFYI_DATABASE_URL": "postgresql://docsrs:password@localhost",
+                "CRATESFYI_DATABASE_URL": "postgresql://docsrs:password@localhost:5432",
                 "S3_ENDPOINT": "http://localhost:9000",
             },
 
