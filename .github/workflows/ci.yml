@@ -7,9 +7,6 @@
 
     "env": {
         "RUST_BACKTRACE": "1",
-        "RUST_LOG": "cratesfyi,rustwide=info",
-        "AWS_ACCESS_KEY_ID": "docsrs",
-        "AWS_SECRET_ACCESS_KEY": "secret_key"
     },
 
     "jobs": {
@@ -26,8 +23,11 @@
             "env": {
                 "CRATESFYI_PREFIX": "ignored/docsrs-prefix",
                 # Build the database and minio urls from environmental variables, using the ports that github selected for the containers
-                "CRATESFYI_DATABASE_URL": "postgresql://docsrs:password@localhost:5432",
+                "CRATESFYI_DATABASE_URL": "postgresql://docsrs:password@localhost/docsrs_ci",
                 "S3_ENDPOINT": "http://localhost:9000",
+                "RUST_LOG": "cratesfyi,rustwide=info",
+                "AWS_ACCESS_KEY_ID": "docsrs",
+                "AWS_SECRET_ACCESS_KEY": "secret_key"
             },
 
             # Run Postgres and Minio as service containers
@@ -56,8 +56,8 @@
                     "ports": [9000, 9000],
                     "volumes": ["minio-data:/data"],
                     "env": {
-                        "MINIO_ACCESS_KEY": "${{ env.AWS_KEY_ID }}",
-                        "MINIO_SECRET_KEY": "${{ env.AWS_ACCESS_KEY }}"
+                        "MINIO_ACCESS_KEY": "docsrs",
+                        "MINIO_SECRET_KEY": "secret_key"
                     }
                 }
             },
@@ -67,7 +67,6 @@
                     "name": "Checkout",
                     "uses": "actions/checkout@v2"
                 },
-
                 {
                     "name": "Install Rust",
                     "uses": "actions-rs/toolchain@v1",
@@ -78,16 +77,7 @@
                     },
                 },
 
-                # Install cargo-sweep for cleaning the build cache
-                {
-                    "name": "Install crates",
-                    "uses": "actions-rs/cargo@v1",
-                    "with": {
-                        "command": "install",
-                        "args": "cargo-sweep"
-                    }
-                },
-
+                # Cache artifacts for faster ci runs
                 {
                     "name": "Cache cargo artifacts",
                     "uses": "actions/cache@v2",
@@ -97,7 +87,8 @@
                             ~/.cargo/git
                             ~/.cargo/registry
                         ",
-                        "key": "${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}"
+                        "key": "${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}",
+                        "restore-keys": "${{ runner.os }}-cargo-"
                     }
                 },
                 {
@@ -106,7 +97,18 @@
                     "with": {
                         "path": "target",
                         # Use the current rustc version hash as part of the cache key
-                        "key": "${{ runner.os }}-cargo-build-target-${{ steps.install-rust.outputs.rustc_hash }}-${{ hashFiles('**/Cargo.lock') }}"
+                        "key": "${{ runner.os }}-cargo-build-target-${{ steps.install-rust.outputs.rustc_hash }}-${{ hashFiles('**/Cargo.lock') }}",
+                        "restore-keys": "${{ runner.os }}-cargo-build-target-${{ steps.install-rust.outputs.rustc_hash }}-"
+                    }
+                },
+
+                # Install cargo-sweep for cleaning the build cache
+                {
+                    "name": "Install crates",
+                    "uses": "actions-rs/cargo@v1",
+                    "with": {
+                        "command": "install",
+                        "args": "cargo-sweep"
                     }
                 },
 
@@ -213,7 +215,7 @@
                     }
                 },
 
-                # Cache cargo artifacts
+                # Cache cargo artifacts for faster ci runs
                 {
                     "name": "Cache cargo artifacts",
                     "uses": "actions/cache@v2",
@@ -223,7 +225,8 @@
                             ~/.cargo/git
                             ~/.cargo/registry
                         ",
-                        "key": "${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}"
+                        "key": "${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}",
+                        "restore-keys": "${{ runner.os }}-cargo-"
                     }
                 },
 
