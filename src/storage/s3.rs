@@ -1,7 +1,10 @@
 use super::Blob;
 use chrono::{DateTime, NaiveDateTime, Utc};
 use failure::Error;
-use futures::Future;
+use futures_util::{
+    future::FutureExt,
+    stream::{FuturesUnordered, StreamExt},
+};
 use log::{error, warn};
 use rusoto_core::region::Region;
 use rusoto_credential::DefaultCredentialsProvider;
@@ -16,30 +19,40 @@ pub(crate) use test::TestS3;
 
 pub(crate) static S3_BUCKET_NAME: &str = "rust-docs-rs";
 
-pub(crate) struct S3Backend<'a> {
+pub(crate) struct S3Backend {
     client: S3Client,
-    bucket: &'a str,
+    bucket: String,
     runtime: Runtime,
 }
 
-impl<'a> S3Backend<'a> {
-    pub(crate) fn new(client: S3Client, bucket: &'a str) -> Self {
+impl S3Backend {
+    pub fn new<B>(client: S3Client, bucket: B) -> Self
+    where
+        B: Into<String>,
+    {
+        Self::with_runtime(client, bucket, Runtime::new().unwrap())
+    }
+
+    pub fn with_runtime<B>(client: S3Client, bucket: B, runtime: Runtime) -> Self
+    where
+        B: Into<String>,
+    {
         Self {
             client,
-            bucket,
-            runtime: Runtime::new().unwrap(),
+            bucket: bucket.into(),
+            runtime,
         }
     }
 
-    pub(super) fn get(&self, path: &str, max_size: usize) -> Result<Blob, Error> {
+    pub fn get(&self, path: &str, max_size: usize) -> Result<Blob, Error> {
         let res = self
-            .client
-            .get_object(GetObjectRequest {
+            .runtime()
+            .handle()
+            .block_on(self.client.get_object(GetObjectRequest {
                 bucket: self.bucket.to_string(),
                 key: path.into(),
                 ..Default::default()
-            })
-            .sync()?;
+            }))?;
 
         let mut content = crate::utils::sized_buffer::SizedBuffer::new(max_size);
         content.reserve(
@@ -63,15 +76,16 @@ impl<'a> S3Backend<'a> {
         })
     }
 
-    pub(super) fn store_batch(&mut self, batch: &[Blob]) -> Result<(), Error> {
-        use futures::stream::FuturesUnordered;
-        use futures::stream::Stream;
-
+    pub(super) fn store_batch(&mut self, mut uploads: Vec<Blob>) -> Result<(), Error> {
         let mut attempts = 0;
 
         loop {
+            // `FuturesUnordered` is used because the order of execution doesn't
+            // matter, we just want things to execute as fast as possible
             let mut futures = FuturesUnordered::new();
-            for blob in batch {
+
+            // Drain uploads, filling `futures` with upload requests
+            for blob in uploads.drain(..) {
                 futures.push(
                     self.client
                         .put_object(PutObjectRequest {
@@ -82,26 +96,52 @@ impl<'a> S3Backend<'a> {
                             content_encoding: blob.compression.as_ref().map(|alg| alg.to_string()),
                             ..Default::default()
                         })
-                        .inspect(|_| {
-                            crate::web::metrics::UPLOADED_FILES_TOTAL.inc_by(1);
+                        // Drop the value returned by `put_object` because we don't need it,
+                        // emit an error and replace the error values with the blob that failed
+                        // to upload so that we can retry failed uploads
+                        .map(|resp| match resp {
+                            Ok(..) => {
+                                // Increment the total uploaded files when a file is uploaded
+                                crate::web::metrics::UPLOADED_FILES_TOTAL.inc_by(1);
+
+                                Ok(())
+                            }
+                            Err(err) => {
+                                error!("failed to upload file to s3: {:?}", err);
+                                Err(blob)
+                            }
                         }),
                 );
             }
             attempts += 1;
 
-            match self.runtime.block_on(futures.map(drop).collect()) {
-                // this batch was successful, start another batch if there are still more files
-                Ok(_) => break,
-                Err(err) => {
-                    error!("failed to upload to s3: {:?}", err);
-                    // if a futures error occurs, retry the batch
-                    if attempts > 2 {
-                        panic!("failed to upload 3 times, exiting");
-                    }
+            // Collect all the failed uploads so that we can retry them
+            while let Some(upload) = self.runtime().handle().block_on(futures.next()) {
+                if let Err(blob) = upload {
+                    uploads.push(blob);
                 }
             }
+
+            // If there are no further uploads we were successful and can return
+            if uploads.is_empty() {
+                break;
+
+            // If more than three attempts to upload fail, return an error
+            } else if attempts >= 3 {
+                error!("failed to upload to s3, abandoning");
+                failure::bail!("Failed to upload to s3 three times, abandoning");
+            }
         }
+
         Ok(())
+    }
+
+    pub fn runtime(&self) -> &Runtime {
+        &self.runtime
+    }
+
+    pub fn client(&self) -> &S3Client {
+        &self.client
     }
 }
 
@@ -147,7 +187,6 @@ pub(crate) mod tests {
     use super::*;
     use crate::test::*;
     use chrono::TimeZone;
-    use std::slice;
 
     #[test]
     fn test_parse_timespec() {
@@ -178,7 +217,7 @@ pub(crate) mod tests {
 
             // Add a test file to the database
             let s3 = env.s3();
-            s3.upload(slice::from_ref(&blob)).unwrap();
+            s3.upload(vec![blob.clone()]).unwrap();
 
             // Test that the proper file was returned
             s3.assert_blob(&blob, "dir/foo.txt");
@@ -212,8 +251,8 @@ pub(crate) mod tests {
             };
 
             let s3 = env.s3();
-            s3.upload(slice::from_ref(&small_blob)).unwrap();
-            s3.upload(slice::from_ref(&big_blob)).unwrap();
+            s3.upload(vec![small_blob.clone()]).unwrap();
+            s3.upload(vec![big_blob.clone()]).unwrap();
 
             s3.with_client(|client| {
                 let blob = client.get("small-blob.bin", MAX_SIZE).unwrap();
@@ -255,10 +294,12 @@ pub(crate) mod tests {
                 })
                 .collect();
 
-            s3.upload(&blobs).unwrap();
-            for blob in &blobs {
-                s3.assert_blob(blob, &blob.path);
+            s3.upload(blobs.clone()).unwrap();
+
+            for blob in blobs {
+                s3.assert_blob(&blob, &blob.path);
             }
+
             Ok(())
         })
     }

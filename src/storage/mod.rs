@@ -6,14 +6,15 @@ pub(crate) use self::s3::S3Backend;
 use chrono::{DateTime, Utc};
 use failure::{err_msg, Error};
 use postgres::{transaction::Transaction, Connection};
-use std::collections::{HashMap, HashSet};
-use std::ffi::OsStr;
-use std::fmt;
-use std::fs;
-use std::io::Read;
-use std::path::{Path, PathBuf};
+use std::{
+    collections::{HashMap, HashSet},
+    ffi::OsStr,
+    fmt, fs,
+    io::Read,
+    path::{Path, PathBuf},
+};
 
-const MAX_CONCURRENT_UPLOADS: usize = 1000;
+const MAX_CONCURRENT_UPLOADS: usize = 500;
 const DEFAULT_COMPRESSION: CompressionAlgorithm = CompressionAlgorithm::Zstd;
 
 pub type CompressionAlgorithms = HashSet<CompressionAlgorithm>;
@@ -40,6 +41,7 @@ macro_rules! enum_id {
 
         impl std::str::FromStr for CompressionAlgorithm {
             type Err = ();
+
             fn from_str(s: &str) -> Result<Self, Self::Err> {
                 match s {
                     $(stringify!($variant) => Ok(Self::$variant),)*
@@ -50,6 +52,7 @@ macro_rules! enum_id {
 
         impl std::convert::TryFrom<i32> for CompressionAlgorithm {
             type Error = i32;
+
             fn try_from(i: i32) -> Result<Self, Self::Error> {
                 match i {
                     $($discriminant => Ok(Self::$variant),)*
@@ -112,7 +115,7 @@ pub fn get_file_list<P: AsRef<Path>>(path: P) -> Result<Vec<PathBuf>, Error> {
 
 pub(crate) enum Storage<'a> {
     Database(DatabaseBackend<'a>),
-    S3(S3Backend<'a>),
+    S3(S3Backend),
 }
 
 impl<'a> Storage<'a> {
@@ -123,6 +126,7 @@ impl<'a> Storage<'a> {
             DatabaseBackend::new(conn).into()
         }
     }
+
     pub(crate) fn get(&self, path: &str, max_size: usize) -> Result<Blob, Error> {
         let mut blob = match self {
             Self::Database(db) => db.get(path, max_size),
@@ -135,9 +139,9 @@ impl<'a> Storage<'a> {
         Ok(blob)
     }
 
-    fn store_batch(&mut self, batch: &[Blob], trans: &Transaction) -> Result<(), Error> {
+    fn store_batch(&mut self, batch: Vec<Blob>, trans: &Transaction) -> Result<(), Error> {
         match self {
-            Self::Database(db) => db.store_batch(batch, trans),
+            Self::Database(db) => db.store_batch(&batch, trans),
             Self::S3(s3) => s3.store_batch(batch),
         }
     }
@@ -191,15 +195,18 @@ impl<'a> Storage<'a> {
                     date_updated: Utc::now(),
                 })
             });
+
         loop {
             let batch: Vec<_> = blobs
                 .by_ref()
                 .take(MAX_CONCURRENT_UPLOADS)
                 .collect::<Result<_, Error>>()?;
+
             if batch.is_empty() {
                 break;
             }
-            self.store_batch(&batch, &trans)?;
+
+            self.store_batch(batch, &trans)?;
         }
 
         trans.commit()?;
@@ -258,8 +265,8 @@ impl<'a> From<DatabaseBackend<'a>> for Storage<'a> {
     }
 }
 
-impl<'a> From<S3Backend<'a>> for Storage<'a> {
-    fn from(db: S3Backend<'a>) -> Self {
+impl<'a> From<S3Backend> for Storage<'a> {
+    fn from(db: S3Backend) -> Self {
         Self::S3(db)
     }
 }
