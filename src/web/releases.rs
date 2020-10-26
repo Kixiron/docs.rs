@@ -4,7 +4,12 @@ use crate::{
     build_queue::QueuedCrate,
     db::Pool,
     impl_webpage,
-    web::{error::Nope, match_version, page::WebPage, redirect_base},
+    web::{
+        error::{DocsrsError, DocsrsResult, Nope},
+        match_version,
+        page::WebPage,
+        redirect_base,
+    },
     BuildQueue,
 };
 use chrono::{DateTime, NaiveDateTime, Utc};
@@ -301,11 +306,11 @@ impl_webpage! {
     HomePage = "core/home.html",
 }
 
-pub fn home_page(req: &mut Request) -> IronResult<Response> {
-    let mut conn = extension!(req, Pool).get()?;
+pub fn home_page(pool: Pool) -> DocsrsResult<HomePage> {
+    let mut conn = pool.get()?;
     let recent_releases = get_releases(&mut conn, 1, RELEASES_IN_HOME, Order::ReleaseTime);
 
-    HomePage { recent_releases }.into_response(req)
+    Ok(HomePage { recent_releases })
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]

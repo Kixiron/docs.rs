@@ -1,14 +1,20 @@
-use super::{error::Nope, redirect, redirect_base, STATIC_FILE_CACHE_DURATION};
-use chrono::Utc;
-use iron::{
-    headers::CacheDirective,
-    headers::{CacheControl, ContentLength, ContentType, LastModified},
-    status::Status,
-    IronResult, Request, Response, Url,
+use super::{
+    error::{DocsrsError, DocsrsResult},
+    redirect, redirect_base, STATIC_FILE_CACHE_DURATION,
 };
+use chrono::Utc;
+use iron::{headers::ContentType, Request};
 use mime_guess::MimeGuess;
-use router::Router;
-use std::{ffi::OsStr, fs, path::Path};
+use std::{convert::TryFrom, ffi::OsStr, fs, path::Path};
+use warp::{
+    http::{
+        header::{HeaderValue, CACHE_CONTROL, CONTENT_LENGTH, CONTENT_TYPE, LAST_MODIFIED},
+        response::Response,
+        status::StatusCode,
+        Error as HttpError, Uri,
+    },
+    hyper::Body,
+};
 
 const VENDORED_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/vendored.css"));
 const STYLE_CSS: &str = include_str!(concat!(env!("OUT_DIR"), "/style.css"));
@@ -16,30 +22,21 @@ const MENU_JS: &str = include_str!(concat!(env!("OUT_DIR"), "/menu.js"));
 const INDEX_JS: &str = include_str!(concat!(env!("OUT_DIR"), "/index.js"));
 const STATIC_SEARCH_PATHS: &[&str] = &["vendor/pure-css/css"];
 
-pub(crate) fn static_handler(req: &mut Request) -> IronResult<Response> {
-    let router = extension!(req, Router);
-    let file = cexpect!(req, router.find("file"));
+pub(crate) fn static_handler(file: String) -> DocsrsResult<Response<Body>> {
+    match file.as_str() {
+        "vendored.css" => serve_resource(VENDORED_CSS, "text/css"),
+        "style.css" => serve_resource(STYLE_CSS, "text/css"),
+        "index.js" => serve_resource(INDEX_JS, "application/javascript"),
+        "menu.js" => serve_resource(MENU_JS, "application/javascript"),
 
-    match file {
-        "vendored.css" => serve_resource(VENDORED_CSS, ContentType("text/css".parse().unwrap())),
-        "style.css" => serve_resource(STYLE_CSS, ContentType("text/css".parse().unwrap())),
-        "index.js" => serve_resource(
-            INDEX_JS,
-            ContentType("application/javascript".parse().unwrap()),
-        ),
-        "menu.js" => serve_resource(
-            MENU_JS,
-            ContentType("application/javascript".parse().unwrap()),
-        ),
-
-        file => serve_file(req, file),
+        file => serve_file(file),
     }
 }
 
-fn serve_file(req: &Request, file: &str) -> IronResult<Response> {
+fn serve_file(req: &Request, file: &str) -> DocsrsResult<Response<Body>> {
     // Filter out files that attempt to traverse directories
     if file.contains("..") || file.contains('/') || file.contains('\\') {
-        return Err(Nope::ResourceNotFound.into());
+        return Err(DocsrsError::ResourceNotFound.into());
     }
 
     // Find the first path that actually exists
@@ -47,8 +44,8 @@ fn serve_file(req: &Request, file: &str) -> IronResult<Response> {
         .iter()
         .map(|p| Path::new(p).join(file))
         .find(|p| p.exists())
-        .ok_or(Nope::ResourceNotFound)?;
-    let contents = ctry!(req, fs::read(&path));
+        .ok_or(DocsrsError::ResourceNotFound)?;
+    let contents = fs::read(&path)?;
 
     // If we can detect the file's mime type, set it
     // MimeGuess misses a lot of the file types we need, so there's a small wrapper
@@ -65,55 +62,52 @@ fn serve_file(req: &Request, file: &str) -> IronResult<Response> {
 
             _ => MimeGuess::from_path(&path)
                 .first()
-                .map(|mime| ContentType(mime.as_ref().parse().unwrap())),
+                .map(AsRef::as_ref)
+                // Unknown types are treated as an octet-stream
+                .unwrap_or("application/octet-stream"),
         });
 
     serve_resource(contents, content_type)
 }
 
-fn serve_resource<R, C>(resource: R, content_type: C) -> IronResult<Response>
+fn serve_resource<R, C>(resource: R, content_type: C) -> DocsrsResult<Response<Body>>
 where
     R: AsRef<[u8]>,
-    C: Into<Option<ContentType>>,
+    HeaderValue: TryFrom<C>,
+    <HeaderValue as TryFrom<C>>::Error: Into<HttpError>,
 {
-    let mut response = Response::with((Status::Ok, resource.as_ref()));
-
-    let cache = vec![
-        CacheDirective::Public,
-        CacheDirective::MaxAge(STATIC_FILE_CACHE_DURATION as u32),
-    ];
-    response.headers.set(CacheControl(cache));
-
-    response
-        .headers
-        .set(ContentLength(resource.as_ref().len() as u64));
-    response.headers.set(LastModified(
-        Utc::now()
-            .format("%a, %d %b %Y %T %Z")
-            .to_string()
-            .parse()
-            .unwrap(),
-    ));
-
-    if let Some(content_type) = content_type.into() {
-        response.headers.set(content_type);
-    }
+    let mut response = Response::builder()
+        .status(StatusCode::OK)
+        .header(CONTENT_TYPE, content_type)
+        .header(
+            CACHE_CONTROL,
+            format!("public, max-age={}", STATIC_FILE_CACHE_DURATION),
+        )
+        .header(CONTENT_LENGTH, resource.as_ref().len())
+        .header(
+            LAST_MODIFIED,
+            Utc::now()
+                .format("%a, %d %b %Y %T %Z")
+                .to_string()
+                .parse()
+                .unwrap(),
+        )
+        .body(resource.as_ref())
+        .expect("invalid response header")
+        .map(Into::into);
 
     Ok(response)
 }
 
-pub(super) fn ico_handler(req: &mut Request) -> IronResult<Response> {
+pub(super) fn ico_handler(req: &mut Request) -> DocsrsResult<()> {
     if let Some(&"favicon.ico") = req.url.path().last() {
         // if we're looking for exactly "favicon.ico", we need to defer to the handler that loads
         // from `public_html`, so return a 404 here to make the main handler carry on
-        Err(Nope::ResourceNotFound.into())
+        Err(DocsrsError::ResourceNotFound.into())
     } else {
         // if we're looking for something like "favicon-20190317-1.35.0-nightly-c82834e2b.ico",
         // redirect to the plain one so that the above branch can trigger with the correct filename
-        let url = ctry!(
-            req,
-            Url::parse(&format!("{}/favicon.ico", redirect_base(req))),
-        );
+        let url = Uri::parse(&format!("{}/favicon.ico", redirect_base(req)));
 
         Ok(redirect(url))
     }

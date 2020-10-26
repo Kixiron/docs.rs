@@ -1,12 +1,14 @@
-use crate::{db::Pool, docbuilder::Limits, impl_webpage, web::page::WebPage};
-use chrono::{DateTime, NaiveDateTime, Utc};
-use iron::{
-    headers::ContentType,
-    mime::{Mime, SubLevel, TopLevel},
-    status, IronResult, Request, Response,
+use crate::{
+    db::Pool,
+    docbuilder::Limits,
+    impl_webpage,
+    web::{error::DocsrsResult, page::WebPage, TemplateData},
 };
+use chrono::{DateTime, NaiveDateTime, Utc};
+use iron::{headers::ContentType, status, IronResult, Request, Response};
 use serde::Serialize;
 use serde_json::Value;
+use std::borrow::Cow;
 
 /// The sitemap
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -17,11 +19,11 @@ struct SitemapXml {
 
 impl_webpage! {
     SitemapXml   = "core/sitemap.xml",
-    content_type = ContentType(Mime(TopLevel::Application, SubLevel::Xml, vec![])),
+    content_type = "application/xml",
 }
 
-pub fn sitemap_handler(req: &mut Request) -> IronResult<Response> {
-    let mut conn = extension!(req, Pool).get()?;
+pub fn sitemap_handler(pool: Pool) -> DocsrsResult<SitemapXml> {
+    let mut conn = pool.get()?;
     let query = conn
         .query(
             "SELECT DISTINCT ON (crates.name)
@@ -32,7 +34,7 @@ pub fn sitemap_handler(req: &mut Request) -> IronResult<Response> {
              WHERE rustdoc_status = true",
             &[],
         )
-        .unwrap();
+        .expect("failed to query the database for the sitemap");
 
     let releases = query
         .into_iter()
@@ -45,7 +47,7 @@ pub fn sitemap_handler(req: &mut Request) -> IronResult<Response> {
         })
         .collect::<Vec<(String, String)>>();
 
-    SitemapXml { releases }.into_response(req)
+    Ok(SitemapXml { releases })
 }
 
 pub fn robots_txt_handler(_: &mut Request) -> IronResult<Response> {
@@ -67,14 +69,11 @@ struct AboutBuilds {
 
 impl_webpage!(AboutBuilds = "core/about/builds.html");
 
-pub fn about_builds_handler(req: &mut Request) -> IronResult<Response> {
-    let mut conn = extension!(req, Pool).get()?;
-    let res = ctry!(
-        req,
-        conn.query("SELECT value FROM config WHERE name = 'rustc_version'", &[]),
-    );
+pub fn about_builds_handler(pool: Pool) -> DocsrsResult<AboutBuilds> {
+    let mut conn = pool.get()?;
+    let res = conn.query("SELECT value FROM config WHERE name = 'rustc_version'", &[]);
 
-    let rustc_version = res.get(0).and_then(|row| {
+    let rustc_version = res.ok().and_then(|res| res.get(0)).and_then(|row| {
         if let Ok(Some(Value::String(version))) = row.try_get(0) {
             Some(version)
         } else {
@@ -82,30 +81,33 @@ pub fn about_builds_handler(req: &mut Request) -> IronResult<Response> {
         }
     });
 
-    AboutBuilds {
+    Ok(AboutBuilds {
         rustc_version,
         limits: Limits::default(),
         active_tab: "builds",
-    }
-    .into_response(req)
+    })
 }
 
 #[derive(Serialize)]
-struct AboutPage<'a> {
+struct AboutPage {
     #[serde(skip)]
     template: String,
-    active_tab: &'a str,
+    active_tab: Cow<'static, str>,
 }
 
-impl_webpage!(AboutPage<'_> = |this: &AboutPage| this.template.clone().into());
+impl_webpage!(AboutPage = |this: &AboutPage| this.template.clone().into());
 
-pub fn about_handler(req: &mut Request) -> IronResult<Response> {
+pub fn about_handler(
+    templates: TemplateData,
+    active_tab: Cow<'static, str>,
+) -> DocsrsResult<String> {
     use super::ErrorPage;
     use iron::status::Status;
 
-    let name = match *req.url.path().last().expect("iron is broken") {
+    let name = match active_tab {
         "about" | "index" => "index",
         x @ "badges" | x @ "metadata" | x @ "redirections" => x,
+
         _ => {
             let msg = "This /about page does not exist. \
                 Perhaps you are interested in <a href=\"https://github.com/rust-lang/docs.rs/tree/master/templates/core/about\">creating</a> it?";
@@ -114,15 +116,16 @@ pub fn about_handler(req: &mut Request) -> IronResult<Response> {
                 message: Some(msg.into()),
                 status: Status::NotFound,
             };
-            return page.into_response(req);
+
+            return page.into_response(&templates);
         }
     };
-    let template = format!("core/about/{}.html", name);
+
     AboutPage {
-        template,
+        template: format!("core/about/{}.html", name),
         active_tab: name,
     }
-    .into_response(req)
+    .into_response(&templates)
 }
 
 #[cfg(test)]

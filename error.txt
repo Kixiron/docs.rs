@@ -1,0 +1,2328 @@
+    Checking docs-rs v0.6.0 (G:\Users\Chase\Code\Rust\docs.rs)
+error[E0433]: failed to resolve: could not find `BlockBlacklistedPrefixes` in `routes`
+   --> src\web\mod.rs:158:53
+    |
+158 |             database_file_handler: Box::new(routes::BlockBlacklistedPrefixes::new(
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^ could not find `BlockBlacklistedPrefixes` in `routes`
+
+error[E0425]: cannot find function `build_routes` in module `routes`
+   --> src\web\mod.rs:141:30
+    |
+141 |         let routes = routes::build_routes();
+    |                              ^^^^^^^^^^^^ not found in `routes`
+
+warning: unused import: `DocsrsError`
+ --> src\web\releases.rs:8:17
+  |
+8 |         error::{DocsrsError, DocsrsResult, Nope},
+  |                 ^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:589:20
+    |
+589 |     status = |err| err.status,
+    |                    ^^^^^^^^^^ expected struct `reqwest::StatusCode`, found enum `iron::status::Status`
+
+error[E0308]: mismatched types
+   --> src\web\releases.rs:503:23
+    |
+503 |     status = |search| search.status,
+    |                       ^^^^^^^^^^^^^ expected struct `reqwest::StatusCode`, found enum `iron::status::Status`
+
+error[E0308]: mismatched types
+   --> src\web\releases.rs:323:20
+    |
+323 |     content_type = ContentType(Mime(TopLevel::Application, SubLevel::Xml, vec![])),
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found struct `iron::headers::ContentType`
+    | 
+   ::: src\web\page\web_page.rs:34:38
+    |
+34  |                 fn content_type() -> &'static str {
+    |                                      ------------ expected `&'static str` because of return type
+
+error[E0308]: mismatched types
+  --> src\web\sitemap.rs:25:20
+   |
+25 |     content_type = ContentType(Mime(TopLevel::Application, SubLevel::Xml, vec![])),
+   |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&str`, found struct `iron::headers::ContentType`
+   | 
+  ::: src\web\page\web_page.rs:34:38
+   |
+34 |                 fn content_type() -> &'static str {
+   |                                      ------------ expected `&'static str` because of return type
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:73
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\builds.rs:40:18
+   |
+40 |     let router = extension!(req, Router);
+   |                  ----------------------- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:24
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+   | 
+  ::: src\web\builds.rs:40:18
+   |
+40 |     let router = extension!(req, Router);
+   |                  ----------------------- in this macro invocation
+   |
+   = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+              found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:73
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\builds.rs:41:16
+   |
+41 |     let name = cexpect!(req, router.find("name"));
+   |                ---------------------------------- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:73
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\builds.rs:42:19
+   |
+42 |     let version = cexpect!(req, router.find("version"));
+   |                   ------------------------------------- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:73
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\builds.rs:45:20
+   |
+45 |     let mut conn = extension!(req, Pool).get()?;
+   |                    --------------------- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:34:73
+   |
+34 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\builds.rs:46:18
+   |
+46 |     let limits = ctry!(req, Limits::for_crate(&mut conn, name));
+   |                  ---------------------------------------------- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:34:73
+   |
+34 |                   return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                           ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\builds.rs:48:17
+   |
+48 |       let query = ctry!(
+   |  _________________-
+49 | |         req,
+50 | |         conn.query(
+51 | |             "SELECT crates.name,
+...  |
+68 | |         )
+69 | |     );
+   | |_____- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\builds.rs:114:23
+    |
+114 |             metadata: cexpect!(req, MetaData::from_crate(&mut conn, &name, &version)),
+    |                       --------------------------------------------------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\builds.rs:119:24
+    |
+119 |         .into_response(req)
+    |                        ^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    |
+    = note:      expected reference `&web::page::templates::TemplateData`
+            found mutable reference `&mut iron::Request<'_, '_>`
+
+error[E0308]: mismatched types
+   --> src\web\builds.rs:113:9
+    |
+39  |   pub fn build_list_handler(req: &mut Request) -> IronResult<Response> {
+    |                                                   -------------------- expected `std::result::Result<iron::Response, iron::IronError>` because of return type
+...
+113 | /         BuildsPage {
+114 | |             metadata: cexpect!(req, MetaData::from_crate(&mut conn, &name, &version)),
+115 | |             builds,
+116 | |             build_details,
+117 | |             limits,
+118 | |         }
+119 | |         .into_response(req)
+    | |___________________________^ expected struct `iron::Response`, found struct `warp::http::Response`
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\crate_details.rs:299:18
+    |
+299 |     let router = extension!(req, Router);
+    |                  ----------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:24
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    | 
+   ::: src\web\crate_details.rs:299:18
+    |
+299 |     let router = extension!(req, Router);
+    |                  ----------------------- in this macro invocation
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\crate_details.rs:301:16
+    |
+301 |     let name = cexpect!(req, router.find("name"));
+    |                ---------------------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\crate_details.rs:304:20
+    |
+304 |     let mut conn = extension!(req, Pool).get()?;
+    |                    --------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\crate_details.rs:308:27
+    |
+308 |             let details = cexpect!(req, CrateDetails::new(&mut conn, &name, &version));
+    |                           ------------------------------------------------------------ in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\crate_details.rs:310:56
+    |
+310 |             CrateDetailsPage { details }.into_response(req)
+    |                                                        ^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    |
+    = note:      expected reference `&web::page::templates::TemplateData`
+            found mutable reference `&mut iron::Request<'_, '_>`
+
+error[E0308]: mismatched types
+   --> src\web\crate_details.rs:310:13
+    |
+298 | pub fn crate_details_handler(req: &mut Request) -> IronResult<Response> {
+    |                                                    -------------------- expected `std::result::Result<iron::Response, iron::IronError>` because of return type
+...
+310 |             CrateDetailsPage { details }.into_response(req)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                   return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                           ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\crate_details.rs:314:23
+    |
+314 |               let url = ctry!(
+    |  _______________________-
+315 | |                 req,
+316 | |                 Url::parse(&format!(
+317 | |                     "{}/crate/{}/{}",
+...   |
+321 | |                 )),
+322 | |             );
+    | |_____________- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\error.rs:75:32
+   |
+75 |                 .into_response(req)
+   |                                ^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   |
+   = note:      expected reference `&web::page::templates::TemplateData`
+           found mutable reference `&mut iron::Request<'_, '_>`
+
+error[E0308]: mismatched types
+  --> src\web\error.rs:70:17
+   |
+65 |       fn handle(&self, req: &mut Request) -> IronResult<Response> {
+   |                                              -------------------- expected `std::result::Result<iron::Response, iron::IronError>` because of return type
+...
+70 | /                 ErrorPage {
+71 | |                     title: "The requested resource does not exist",
+72 | |                     message: Some("no such resource".into()),
+73 | |                     status: Status::NotFound,
+74 | |                 }
+75 | |                 .into_response(req)
+   | |___________________________________^ expected struct `iron::Response`, found struct `warp::http::Response`
+   |
+   = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+              found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+
+error[E0308]: mismatched types
+  --> src\web\error.rs:86:32
+   |
+86 |                 .into_response(req)
+   |                                ^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   |
+   = note:      expected reference `&web::page::templates::TemplateData`
+           found mutable reference `&mut iron::Request<'_, '_>`
+
+error[E0308]: mismatched types
+  --> src\web\error.rs:81:17
+   |
+65 |       fn handle(&self, req: &mut Request) -> IronResult<Response> {
+   |                                              -------------------- expected `std::result::Result<iron::Response, iron::IronError>` because of return type
+...
+81 | /                 ErrorPage {
+82 | |                     title: "The requested crate does not exist",
+83 | |                     message: Some("no such crate".into()),
+84 | |                     status: Status::NotFound,
+85 | |                 }
+86 | |                 .into_response(req)
+   | |___________________________________^ expected struct `iron::Response`, found struct `warp::http::Response`
+   |
+   = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+              found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+
+error[E0308]: mismatched types
+  --> src\web\error.rs:97:32
+   |
+97 |                 .into_response(req)
+   |                                ^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   |
+   = note:      expected reference `&web::page::templates::TemplateData`
+           found mutable reference `&mut iron::Request<'_, '_>`
+
+error[E0308]: mismatched types
+  --> src\web\error.rs:92:17
+   |
+65 |       fn handle(&self, req: &mut Request) -> IronResult<Response> {
+   |                                              -------------------- expected `std::result::Result<iron::Response, iron::IronError>` because of return type
+...
+92 | /                 ErrorPage {
+93 | |                     title: "The requested version does not exist",
+94 | |                     message: Some("no such version for this crate".into()),
+95 | |                     status: Status::NotFound,
+96 | |                 }
+97 | |                 .into_response(req)
+   | |___________________________________^ expected struct `iron::Response`, found struct `warp::http::Response`
+   |
+   = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+              found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+
+error[E0308]: mismatched types
+   --> src\web\error.rs:111:36
+    |
+111 |                     .into_response(req)
+    |                                    ^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    |
+    = note:      expected reference `&web::page::templates::TemplateData`
+            found mutable reference `&mut iron::Request<'_, '_>`
+
+error[E0308]: mismatched types
+   --> src\web\error.rs:105:21
+    |
+65  |       fn handle(&self, req: &mut Request) -> IronResult<Response> {
+    |                                              -------------------- expected `std::result::Result<iron::Response, iron::IronError>` because of return type
+...
+105 | /                     Search {
+106 | |                         title: format!("No crates found matching '{}'", query),
+107 | |                         search_query: Some(query.into_owned()),
+108 | |                         status: Status::NotFound,
+109 | |                         ..Default::default()
+110 | |                     }
+111 | |                     .into_response(req)
+    | |_______________________________________^ expected struct `iron::Response`, found struct `warp::http::Response`
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+
+error[E0308]: mismatched types
+   --> src\web\error.rs:119:36
+    |
+119 |                     .into_response(req)
+    |                                    ^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    |
+    = note:      expected reference `&web::page::templates::TemplateData`
+            found mutable reference `&mut iron::Request<'_, '_>`
+
+error[E0308]: mismatched types
+   --> src\web\error.rs:114:21
+    |
+65  |       fn handle(&self, req: &mut Request) -> IronResult<Response> {
+    |                                              -------------------- expected `std::result::Result<iron::Response, iron::IronError>` because of return type
+...
+114 | /                     Search {
+115 | |                         title: "No results given for empty search query".to_owned(),
+116 | |                         status: Status::NotFound,
+117 | |                         ..Default::default()
+118 | |                     }
+119 | |                     .into_response(req)
+    | |_______________________________________^ expected struct `iron::Response`, found struct `warp::http::Response`
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+
+error[E0308]: mismatched types
+   --> src\web\error.rs:130:32
+    |
+130 |                 .into_response(req)
+    |                                ^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    |
+    = note:      expected reference `&web::page::templates::TemplateData`
+            found mutable reference `&mut iron::Request<'_, '_>`
+
+error[E0308]: mismatched types
+   --> src\web\error.rs:125:17
+    |
+65  |       fn handle(&self, req: &mut Request) -> IronResult<Response> {
+    |                                              -------------------- expected `std::result::Result<iron::Response, iron::IronError>` because of return type
+...
+125 | /                 ErrorPage {
+126 | |                     title: "Internal server error",
+127 | |                     message: Some("internal server error".into()),
+128 | |                     status: Status::InternalServerError,
+129 | |                 }
+130 | |                 .into_response(req)
+    | |___________________________________^ expected struct `iron::Response`, found struct `warp::http::Response`
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:73
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\file.rs:60:23
+   |
+60 |         let storage = extension!(req, Storage);
+   |                       ------------------------ in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:24
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+   | 
+  ::: src\web\file.rs:60:23
+   |
+60 |         let storage = extension!(req, Storage);
+   |                       ------------------------ in this macro invocation
+   |
+   = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+              found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:73
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\file.rs:61:22
+   |
+61 |         let config = extension!(req, Config);
+   |                      ----------------------- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:73
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\metrics.rs:11:19
+   |
+11 |     let metrics = extension!(req, Metrics);
+   |                   ------------------------ in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:24
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+   | 
+  ::: src\web\metrics.rs:11:19
+   |
+11 |     let metrics = extension!(req, Metrics);
+   |                   ------------------------ in this macro invocation
+   |
+   = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+              found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:73
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\metrics.rs:12:16
+   |
+12 |     let pool = extension!(req, Pool);
+   |                --------------------- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:73
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\metrics.rs:13:17
+   |
+13 |     let queue = extension!(req, BuildQueue);
+   |                 --------------------------- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:34:73
+   |
+34 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\metrics.rs:16:20
+   |
+16 |     let families = ctry!(req, metrics.gather(pool, &*queue));
+   |                    ----------------------------------------- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:34:73
+   |
+34 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\metrics.rs:17:5
+   |
+17 |     ctry!(req, TextEncoder::new().encode(&families, &mut buffer));
+   |     -------------------------------------------------------------- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:73
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\metrics.rs:53:23
+   |
+53 |         let metrics = extension!(request, Metrics);
+   |                       ---------------------------- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:24
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+   | 
+  ::: src\web\metrics.rs:53:23
+   |
+53 |         let metrics = extension!(request, Metrics);
+   |                       ---------------------------- in this macro invocation
+   |
+   = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+              found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\releases.rs:327:20
+    |
+327 |     let mut conn = extension!(req, Pool).get()?;
+    |                    --------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:24
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    | 
+   ::: src\web\releases.rs:327:20
+    |
+327 |     let mut conn = extension!(req, Pool).get()?;
+    |                    --------------------- in this macro invocation
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\releases.rs:330:51
+    |
+330 |     ReleaseFeed { recent_releases }.into_response(req)
+    |                                                   ^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    |
+    = note:      expected reference `&web::page::templates::TemplateData`
+            found mutable reference `&mut iron::Request<'_, '_>`
+
+error[E0308]: mismatched types
+   --> src\web\releases.rs:330:5
+    |
+326 | pub fn releases_feed_handler(req: &mut Request) -> IronResult<Response> {
+    |                                                    -------------------- expected `std::result::Result<iron::Response, iron::IronError>` because of return type
+...
+330 |     ReleaseFeed { recent_releases }.into_response(req)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\releases.rs:360:28
+    |
+360 |     let page_number: i64 = extension!(req, Router)
+    |                            ----------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:24
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    | 
+   ::: src\web\releases.rs:360:28
+    |
+360 |     let page_number: i64 = extension!(req, Router)
+    |                            ----------------------- in this macro invocation
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\releases.rs:380:24
+    |
+380 |         let mut conn = extension!(req, Pool).get()?;
+    |                        --------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\releases.rs:399:20
+    |
+399 |     .into_response(req)
+    |                    ^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    |
+    = note:      expected reference `&web::page::templates::TemplateData`
+            found mutable reference `&mut iron::Request<'_, '_>`
+
+error[E0308]: mismatched types
+   --> src\web\releases.rs:390:5
+    |
+359 |   fn releases_handler(req: &mut Request, release_type: ReleaseType) -> IronResult<Response> {
+    |                                                                        -------------------- expected `std::result::Result<iron::Response, iron::IronError>` because of return type
+...
+390 | /     ViewReleases {
+391 | |         releases,
+392 | |         description: description.into(),
+393 | |         release_type,
+...   |
+398 | |     }
+399 | |     .into_response(req)
+    | |_______________________^ expected struct `iron::Response`, found struct `warp::http::Response`
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\releases.rs:419:18
+    |
+419 |     let router = extension!(req, Router);
+    |                  ----------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:24
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    | 
+   ::: src\web\releases.rs:419:18
+    |
+419 |     let router = extension!(req, Router);
+    |                  ----------------------- in this macro invocation
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\releases.rs:431:24
+    |
+431 |         let mut conn = extension!(req, Pool).get()?;
+    |                        --------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\releases.rs:441:17
+    |
+441 |                 cexpect!(req, author.nth(1)),
+    |                 ---------------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\releases.rs:468:20
+    |
+468 |     .into_response(req)
+    |                    ^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    |
+    = note:      expected reference `&web::page::templates::TemplateData`
+            found mutable reference `&mut iron::Request<'_, '_>`
+
+error[E0308]: mismatched types
+   --> src\web\releases.rs:459:5
+    |
+418 |   pub fn author_handler(req: &mut Request) -> IronResult<Response> {
+    |                                               -------------------- expected `std::result::Result<iron::Response, iron::IronError>` because of return type
+...
+459 | /     ViewReleases {
+460 | |         releases,
+461 | |         description: format!("Crates from {}", author_name),
+462 | |         release_type: ReleaseType::Author,
+...   |
+467 | |     }
+468 | |     .into_response(req)
+    | |_______________________^ expected struct `iron::Response`, found struct `warp::http::Response`
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\releases.rs:510:20
+    |
+510 |     let mut conn = extension!(req, Pool).get()?;
+    |                    --------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:24
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    | 
+   ::: src\web\releases.rs:510:20
+    |
+510 |     let mut conn = extension!(req, Pool).get()?;
+    |                    --------------------- in this macro invocation
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                   return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                           ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\releases.rs:526:28
+    |
+526 |                   let rows = ctry!(
+    |  ____________________________-
+527 | |                     req,
+528 | |                     conn.query(
+529 | |                         "SELECT crates.name,
+...   |
+538 | |                     ),
+539 | |                 );
+    | |_________________- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                   return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                           ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\releases.rs:545:27
+    |
+545 |                   let url = ctry!(
+    |  ___________________________-
+546 | |                     req,
+547 | |                     Url::parse(&format!(
+548 | |                         "{}/{}/{}/{}",
+...   |
+553 | |                     )),
+554 | |                 );
+    | |_________________- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                   return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                           ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\releases.rs:573:32
+    |
+573 |                       let rows = ctry!(
+    |  ________________________________-
+574 | |                         req,
+575 | |                         conn.query(
+576 | |                             "SELECT rustdoc_status
+...   |
+580 | |                         ),
+581 | |                     );
+    | |_____________________- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                   return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                           ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\releases.rs:590:21
+    |
+590 | /                     ctry!(
+591 | |                         req,
+592 | |                         Url::parse(&format!("{}/{}/{}", redirect_base(req), query, version)),
+593 | |                     )
+    | |_____________________- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                   return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                           ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\releases.rs:595:21
+    |
+595 | /                     ctry!(
+596 | |                         req,
+597 | |                         Url::parse(&format!(
+598 | |                             "{}/crate/{}/{}",
+...   |
+602 | |                         )),
+603 | |                     )
+    | |_____________________- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\releases.rs:627:24
+    |
+627 |         .into_response(req)
+    |                        ^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    |
+    = note:      expected reference `&web::page::templates::TemplateData`
+            found mutable reference `&mut iron::Request<'_, '_>`
+
+error[E0308]: mismatched types
+   --> src\web\releases.rs:621:9
+    |
+506 |   pub fn search_handler(req: &mut Request) -> IronResult<Response> {
+    |                                               -------------------- expected `std::result::Result<iron::Response, iron::IronError>` because of return type
+...
+621 | /         Search {
+622 | |             title,
+623 | |             results,
+624 | |             search_query: Some(query.into_owned()),
+625 | |             ..Default::default()
+626 | |         }
+627 | |         .into_response(req)
+    | |___________________________^ expected struct `iron::Response`, found struct `warp::http::Response`
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\releases.rs:644:20
+    |
+644 |     let mut conn = extension!(req, Pool).get()?;
+    |                    --------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:24
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    | 
+   ::: src\web\releases.rs:644:20
+    |
+644 |     let mut conn = extension!(req, Pool).get()?;
+    |                    --------------------- in this macro invocation
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                   return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                           ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\releases.rs:645:32
+    |
+645 |       let activity_data: Value = ctry!(
+    |  ________________________________-
+646 | |         req,
+647 | |         conn.query(
+648 | |             "SELECT value FROM config WHERE name = 'release_activity'",
+649 | |             &[]
+650 | |         ),
+651 | |     )
+    | |_____- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\releases.rs:660:20
+    |
+660 |     .into_response(req)
+    |                    ^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    |
+    = note:      expected reference `&web::page::templates::TemplateData`
+            found mutable reference `&mut iron::Request<'_, '_>`
+
+error[E0308]: mismatched types
+   --> src\web\releases.rs:656:5
+    |
+643 |   pub fn activity_handler(req: &mut Request) -> IronResult<Response> {
+    |                                                 -------------------- expected `std::result::Result<iron::Response, iron::IronError>` because of return type
+...
+656 | /     ReleaseActivity {
+657 | |         description: "Monthly release activity",
+658 | |         activity_data,
+659 | |     }
+660 | |     .into_response(req)
+    | |_______________________^ expected struct `iron::Response`, found struct `warp::http::Response`
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\releases.rs:674:32
+    |
+674 |     let mut queue = ctry!(req, extension!(req, BuildQueue).queued_crates());
+    |                                --------------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:24
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    | 
+   ::: src\web\releases.rs:674:32
+    |
+674 |     let mut queue = ctry!(req, extension!(req, BuildQueue).queued_crates());
+    |                                --------------------------- in this macro invocation
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\releases.rs:674:21
+    |
+674 |     let mut queue = ctry!(req, extension!(req, BuildQueue).queued_crates());
+    |                     ------------------------------------------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\releases.rs:686:20
+    |
+686 |     .into_response(req)
+    |                    ^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    |
+    = note:      expected reference `&web::page::templates::TemplateData`
+            found mutable reference `&mut iron::Request<'_, '_>`
+
+error[E0308]: mismatched types
+   --> src\web\releases.rs:682:5
+    |
+673 |   pub fn build_queue_handler(req: &mut Request) -> IronResult<Response> {
+    |                                                    -------------------- expected `std::result::Result<iron::Response, iron::IronError>` because of return type
+...
+682 | /     BuildQueuePage {
+683 | |         description: "List of crates scheduled to build",
+684 | |         queue,
+685 | |     }
+686 | |     .into_response(req)
+    | |_______________________^ expected struct `iron::Response`, found struct `warp::http::Response`
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+
+error[E0282]: type annotations needed
+  --> src\web\routes.rs:23:29
+   |
+23 |     let render = |template| template.into_response(&templates.clone());
+   |                             ^^^^^^^^ cannot infer type
+   |
+   = note: type must be known at this point
+
+error[E0277]: expected a `std::ops::Fn<()>` closure, found `warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>`
+  --> src\web\routes.rs:41:18
+   |
+41 |             .map(pool)
+   |                  ^^^^ expected an `Fn<()>` closure, found `warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>`
+   |
+   = help: the trait `std::ops::Fn<()>` is not implemented for `warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>`
+   = note: wrap the `warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>` in a closure with no arguments: `|| { /* code */ }`
+   = note: required because of the requirements on the impl of `warp::generic::Func<()>` for `warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>`
+
+error[E0599]: no method named `map` found for struct `warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>` in the current scope
+  --> src\web\routes.rs:42:14
+   |
+42 |             .map(super::sitemap::sitemap_handler)
+   |              ^^^ method not found in `warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>`
+   | 
+  ::: C:\Users\Chase\.cargo\registry\src\github.com-1ecc6299db9ec823\warp-0.2.5\src\filter\map.rs:11:1
+   |
+11 | pub struct Map<T, F> {
+   | --------------------
+   | |
+   | doesn't satisfy `_: std::iter::Iterator`
+   | doesn't satisfy `_: warp::Filter`
+   | doesn't satisfy `_: warp::filter::FilterBase`
+   |
+   = note: the method `map` exists but the following trait bounds were not satisfied:
+           `warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>: warp::filter::FilterBase`
+           which is required by `warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>: warp::Filter`
+           `&warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>: warp::filter::FilterBase`
+           which is required by `&warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>: warp::Filter`
+           `&mut warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>: warp::filter::FilterBase`
+           which is required by `&mut warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>: warp::Filter`
+           `warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>: std::iter::Iterator`
+           which is required by `&mut warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>: std::iter::Iterator`
+
+error[E0277]: expected a `std::ops::Fn<(std::string::String,)>` closure, found `warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>`
+  --> src\web\routes.rs:52:18
+   |
+52 |             .map(pool)
+   |                  ^^^^ expected an `Fn<(std::string::String,)>` closure, found `warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>`
+   |
+   = help: the trait `std::ops::Fn<(std::string::String,)>` is not implemented for `warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>`
+   = note: required because of the requirements on the impl of `warp::generic::Func<(std::string::String,)>` for `warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>`
+
+error[E0599]: no method named `map` found for struct `warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>` in the current scope
+  --> src\web\routes.rs:53:14
+   |
+53 |             .map(super::statics::static_handler)
+   |              ^^^ method not found in `warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>`
+   | 
+  ::: C:\Users\Chase\.cargo\registry\src\github.com-1ecc6299db9ec823\warp-0.2.5\src\filter\map.rs:11:1
+   |
+11 | pub struct Map<T, F> {
+   | --------------------
+   | |
+   | doesn't satisfy `_: std::iter::Iterator`
+   | doesn't satisfy `_: warp::Filter`
+   | doesn't satisfy `_: warp::filter::FilterBase`
+   |
+   = note: the method `map` exists but the following trait bounds were not satisfied:
+           `warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>: warp::filter::FilterBase`
+           which is required by `warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>: warp::Filter`
+           `&warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>: warp::filter::FilterBase`
+           which is required by `&warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>: warp::Filter`
+           `&mut warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>: warp::filter::FilterBase`
+           which is required by `&mut warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>: warp::Filter`
+           `warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>: std::iter::Iterator`
+           which is required by `&mut warp::filter::map::Map<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<warp::filter::and::And<impl warp::Filter+std::marker::Copy, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, warp::path::Exact<warp::path::internal::Opaque<web::routes::build_warp::__StaticPath>>>, impl warp::Filter+std::marker::Copy>, impl warp::Filter+std::marker::Copy>, warp::filter::map::Map<impl warp::Filter+std::marker::Copy, [closure@src\web\routes.rs:24:32: 24:58 connection_pool:_]>>: std::iter::Iterator`
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:108:27
+    |
+108 |             let storage = extension!(req, Storage);
+    |                           ------------------------ in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:24
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    | 
+   ::: src\web\rustdoc.rs:108:27
+    |
+108 |             let storage = extension!(req, Storage);
+    |                           ------------------------ in this macro invocation
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:109:26
+    |
+109 |             let config = extension!(req, Config);
+    |                          ----------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:131:18
+    |
+131 |     let router = extension!(req, Router);
+    |                  ----------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:132:20
+    |
+132 |     let mut conn = extension!(req, Pool).get()?;
+    |                    --------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:135:22
+    |
+135 |     let crate_name = cexpect!(req, router.find("crate"));
+    |                      ----------------------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                   return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                           ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:156:20
+    |
+156 |           let rows = ctry!(
+    |  ____________________-
+157 | |             req,
+158 | |             conn.query(
+159 | |                 "SELECT target_name, rustdoc_status
+...   |
+163 | |             ),
+164 | |         );
+    | |_________- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:34:73
+   |
+34 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\rustdoc.rs:72:19
+   |
+72 |         let url = ctry!(req, Url::parse(&url_str));
+   |                   -------------------------------- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:34:24
+   |
+34 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+   | 
+  ::: src\web\rustdoc.rs:72:19
+   |
+72 |         let url = ctry!(req, Url::parse(&url_str));
+   |                   -------------------------------- in this macro invocation
+   |
+   = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+              found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:34:73
+   |
+34 |                   return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                           ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\rustdoc.rs:80:19
+   |
+80 |           let url = ctry!(
+   |  ___________________-
+81 | |             req,
+82 | |             Url::parse(&format!("{}/crate/{}/{}", redirect_base(req), name, vers)),
+83 | |         );
+   | |_________- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:34:24
+   |
+34 |                   return $crate::web::page::WebPage::into_response(error, request);
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+   | 
+  ::: src\web\rustdoc.rs:80:19
+   |
+80 |           let url = ctry!(
+   |  ___________________-
+81 | |             req,
+82 | |             Url::parse(&format!("{}/crate/{}/{}", redirect_base(req), name, vers)),
+83 | |         );
+   | |_________- in this macro invocation
+   |
+   = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+              found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:212:19
+    |
+212 |         let ctx = ctry!(req, tera::Context::from_serialize(self));
+    |                   ----------------------------------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:24
+    |
+34  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    | 
+   ::: src\web\rustdoc.rs:212:19
+    |
+212 |         let ctx = ctry!(req, tera::Context::from_serialize(self));
+    |                   ----------------------------------------------- in this macro invocation
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:219:30
+    |
+219 |                 let config = extension!(req, Config);
+    |                              ----------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:225:17
+    |
+225 |                 ctry!(req, Err(err))
+    |                 -------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:227:23
+    |
+227 |             result => ctry!(req, result),
+    |                       ------------------ in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:242:19
+    |
+242 |     let metrics = extension!(req, Metrics).clone();
+    |                   ------------------------ in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:24
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    | 
+   ::: src\web\rustdoc.rs:242:19
+    |
+242 |     let metrics = extension!(req, Metrics).clone();
+    |                   ------------------------ in this macro invocation
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:246:18
+    |
+246 |     let router = extension!(req, Router);
+    |                  ----------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:254:16
+    |
+254 |     let pool = extension!(req, Pool);
+    |                --------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:256:18
+    |
+256 |     let config = extension!(req, Config);
+    |                  ----------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:257:19
+    |
+257 |     let storage = extension!(req, Storage);
+    |                   ------------------------ in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:273:19
+    |
+273 |         let url = ctry!(req, Url::parse(&redirect_path));
+    |                   -------------------------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:24
+    |
+34  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    | 
+   ::: src\web\rustdoc.rs:273:19
+    |
+273 |         let url = ctry!(req, Url::parse(&redirect_path));
+    |                   -------------------------------------- in this macro invocation
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:311:17
+    |
+311 |     let krate = cexpect!(req, CrateDetails::new(&mut conn, &name, &version));
+    |                 ------------------------------------------------------------ in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:343:23
+    |
+343 |             return if ctry!(req, storage.exists(&path)) {
+    |                       --------------------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:484:18
+    |
+484 |     let router = extension!(req, Router);
+    |                  ----------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:24
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    | 
+   ::: src\web\rustdoc.rs:484:18
+    |
+484 |     let router = extension!(req, Router);
+    |                  ----------------------- in this macro invocation
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:485:16
+    |
+485 |     let name = cexpect!(req, router.find("name"));
+    |                ---------------------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:486:19
+    |
+486 |     let version = cexpect!(req, router.find("version"));
+    |                   ------------------------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:488:16
+    |
+488 |     let pool = extension!(req, Pool);
+    |                --------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:490:19
+    |
+490 |     let storage = extension!(req, Storage);
+    |                   ------------------------ in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:491:18
+    |
+491 |     let config = extension!(req, Config);
+    |                  ----------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:525:15
+    |
+525 |     let url = ctry!(req, Url::parse(&url));
+    |               ---------------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:543:30
+    |
+543 |     let name = cexpect!(req, extension!(req, Router).find("crate"));
+    |                              ----------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:24
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    | 
+   ::: src\web\rustdoc.rs:543:30
+    |
+543 |     let name = cexpect!(req, extension!(req, Router).find("crate"));
+    |                              ----------------------- in this macro invocation
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:543:16
+    |
+543 |     let name = cexpect!(req, extension!(req, Router).find("crate"));
+    |                ---------------------------------------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:544:20
+    |
+544 |     let mut conn = extension!(req, Pool).get()?;
+    |                    --------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                   return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                           ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:549:28
+    |
+549 |                   let rows = ctry!(
+    |  ____________________________-
+550 | |                     req,
+551 | |                     conn.query(
+552 | |                         "SELECT rustdoc_status
+...   |
+556 | |                     ),
+557 | |                 );
+    | |_________________- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                   return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                           ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:575:27
+    |
+575 |                   let url = ctry!(
+    |  ___________________________-
+576 | |                     req,
+577 | |                     iron::url::Url::parse_with_params(&base_url, &[("version", version)]),
+578 | |                 );
+    | |_________________- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:579:32
+    |
+579 |                 let iron_url = ctry!(req, Url::from_generic_url(url));
+    |                                -------------------------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:596:48
+    |
+596 |     let mut resp = Response::with((status::Ok, ctry!(req, Badge::new(options)).to_svg()));
+    |                                                ------------------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:621:27
+    |
+621 |             let storage = extension!(req, Storage);
+    |                           ------------------------ in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:24
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    | 
+   ::: src\web\rustdoc.rs:621:27
+    |
+621 |             let storage = extension!(req, Storage);
+    |                           ------------------------ in this macro invocation
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\rustdoc.rs:622:26
+    |
+622 |             let config = extension!(req, Config);
+    |                          ----------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:73
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\sitemap.rs:76:20
+   |
+76 |     let mut conn = extension!(req, Pool).get()?;
+   |                    --------------------- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:24
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+   | 
+  ::: src\web\sitemap.rs:76:20
+   |
+76 |     let mut conn = extension!(req, Pool).get()?;
+   |                    --------------------- in this macro invocation
+   |
+   = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+              found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:34:73
+   |
+34 |                   return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                           ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\sitemap.rs:77:15
+   |
+77 |       let res = ctry!(
+   |  _______________-
+78 | |         req,
+79 | |         conn.query("SELECT value FROM config WHERE name = 'rustc_version'", &[]),
+80 | |     );
+   | |_____- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\sitemap.rs:95:20
+   |
+95 |     .into_response(req)
+   |                    ^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   |
+   = note:      expected reference `&web::page::templates::TemplateData`
+           found mutable reference `&mut iron::Request<'_, '_>`
+
+error[E0308]: mismatched types
+  --> src\web\sitemap.rs:90:5
+   |
+75 |   pub fn about_builds_handler(req: &mut Request) -> IronResult<Response> {
+   |                                                     -------------------- expected `std::result::Result<iron::Response, iron::IronError>` because of return type
+...
+90 | /     AboutBuilds {
+91 | |         rustc_version,
+92 | |         limits: Limits::default(),
+93 | |         active_tab: "builds",
+94 | |     }
+95 | |     .into_response(req)
+   | |_______________________^ expected struct `iron::Response`, found struct `warp::http::Response`
+   |
+   = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+              found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+
+error[E0308]: mismatched types
+   --> src\web\sitemap.rs:122:39
+    |
+122 |             return page.into_response(req);
+    |                                       ^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    |
+    = note:      expected reference `&web::page::templates::TemplateData`
+            found mutable reference `&mut iron::Request<'_, '_>`
+
+error[E0308]: mismatched types
+   --> src\web\sitemap.rs:122:20
+    |
+122 |             return page.into_response(req);
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+
+error[E0308]: mismatched types
+   --> src\web\sitemap.rs:130:20
+    |
+130 |     .into_response(req)
+    |                    ^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    |
+    = note:      expected reference `&web::page::templates::TemplateData`
+            found mutable reference `&mut iron::Request<'_, '_>`
+
+error[E0308]: mismatched types
+   --> src\web\sitemap.rs:126:5
+    |
+107 |   pub fn about_handler(req: &mut Request) -> IronResult<Response> {
+    |                                              -------------------- expected `std::result::Result<iron::Response, iron::IronError>` because of return type
+...
+126 | /     AboutPage {
+127 | |         template,
+128 | |         active_tab: name,
+129 | |     }
+130 | |     .into_response(req)
+    | |_______________________^ expected struct `iron::Response`, found struct `warp::http::Response`
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\source.rs:158:18
+    |
+158 |     let router = extension!(req, Router);
+    |                  ----------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:24
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    | 
+   ::: src\web\source.rs:158:18
+    |
+158 |     let router = extension!(req, Router);
+    |                  ----------------------- in this macro invocation
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\source.rs:159:16
+    |
+159 |     let name = cexpect!(req, router.find("name"));
+    |                ---------------------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\source.rs:160:19
+    |
+160 |     let version = cexpect!(req, router.find("version"));
+    |                   ------------------------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\source.rs:187:16
+    |
+187 |     let pool = extension!(req, Pool);
+    |                --------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\source.rs:189:19
+    |
+189 |     let storage = extension!(req, Storage);
+    |                   ------------------------ in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:63:73
+    |
+63  |                 return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\source.rs:190:18
+    |
+190 |     let config = extension!(req, Config);
+    |                  ----------------------- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\source.rs:225:20
+    |
+225 |     .into_response(req)
+    |                    ^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    |
+    = note:      expected reference `&web::page::templates::TemplateData`
+            found mutable reference `&mut iron::Request<'_, '_>`
+
+error[E0308]: mismatched types
+   --> src\web\source.rs:219:5
+    |
+157 |   pub fn source_browser_handler(req: &mut Request) -> IronResult<Response> {
+    |                                                       -------------------- expected `std::result::Result<iron::Response, iron::IronError>` because of return type
+...
+219 | /     SourcePage {
+220 | |         file_list,
+221 | |         show_parent_link: !req_path.is_empty(),
+222 | |         file_content,
+223 | |         is_rust_source,
+224 | |     }
+225 | |     .into_response(req)
+    | |_______________________^ expected struct `iron::Response`, found struct `warp::http::Response`
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:73
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\statics.rs:20:18
+   |
+20 |     let router = extension!(req, Router);
+   |                  ----------------------- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:24
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+   | 
+  ::: src\web\statics.rs:20:18
+   |
+20 |     let router = extension!(req, Router);
+   |                  ----------------------- in this macro invocation
+   |
+   = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+              found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:63:73
+   |
+63 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\statics.rs:21:16
+   |
+21 |     let file = cexpect!(req, router.find("file"));
+   |                ---------------------------------- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:34:73
+   |
+34 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                                                                         ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+   | 
+  ::: src\web\statics.rs:51:20
+   |
+51 |     let contents = ctry!(req, fs::read(&path));
+   |                    --------------------------- in this macro invocation
+   |
+   = note: expected reference `&web::page::templates::TemplateData`
+              found reference `&iron::Request<'_, '_>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+  --> src\web\mod.rs:34:24
+   |
+34 |                 return $crate::web::page::WebPage::into_response(error, request);
+   |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+   | 
+  ::: src\web\statics.rs:51:20
+   |
+51 |     let contents = ctry!(req, fs::read(&path));
+   |                    --------------------------- in this macro invocation
+   |
+   = note: expected type `std::result::Result<iron::Response, iron::IronError>`
+              found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+   = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:73
+    |
+34  |                   return $crate::web::page::WebPage::into_response(error, request);
+    |                                                                           ^^^^^^^ expected struct `web::page::templates::TemplateData`, found struct `iron::Request`
+    | 
+   ::: src\web\statics.rs:113:19
+    |
+113 |           let url = ctry!(
+    |  ___________________-
+114 | |             req,
+115 | |             Url::parse(&format!("{}/favicon.ico", redirect_base(req))),
+116 | |         );
+    | |_________- in this macro invocation
+    |
+    = note: expected reference `&web::page::templates::TemplateData`
+               found reference `&iron::Request<'_, '_>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src\web\mod.rs:34:24
+    |
+34  |                   return $crate::web::page::WebPage::into_response(error, request);
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected struct `iron::Response`, found struct `warp::http::Response`
+    | 
+   ::: src\web\statics.rs:113:19
+    |
+113 |           let url = ctry!(
+    |  ___________________-
+114 | |             req,
+115 | |             Url::parse(&format!("{}/favicon.ico", redirect_base(req))),
+116 | |         );
+    | |_________- in this macro invocation
+    |
+    = note: expected enum `std::result::Result<iron::Response, iron::IronError>`
+               found enum `std::result::Result<warp::http::Response<std::string::String>, web::error::DocsrsError>`
+    = note: this error originates in a macro (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning: unused import: `page::WebPage`
+ --> src\web\routes.rs:3:11
+  |
+3 |     web::{page::WebPage, TemplateData},
+  |           ^^^^^^^^^^^^^
+
+warning: unused import: `Reply`
+ --> src\web\routes.rs:6:42
+  |
+6 | use warp::{http::Uri, Filter, Rejection, Reply};
+  |                                          ^^^^^
+
+error: aborting due to 156 previous errors; 3 warnings emitted
+
+Some errors have detailed explanations: E0277, E0282, E0308, E0425, E0433, E0599.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `docs-rs`.
+
+To learn more, run the command again with --verbose.

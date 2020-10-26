@@ -9,11 +9,7 @@ build = "build.rs"
 edition = "2018"
 
 [workspace]
-exclude = [
-    "ignored",
-    ".workspace",
-    ".rustwide-docker",
-]
+exclude = ["ignored", ".workspace", ".rustwide-docker"]
 
 [dependencies]
 log = "0.4"
@@ -51,6 +47,7 @@ base64 = "0.12.1"
 strum = { version = "0.18.0", features = ["derive"] }
 lol_html = "0.2"
 font-awesome-as-a-crate = { path = "crates/font-awesome-as-a-crate" }
+warp = "0.2.1"
 
 # Async
 tokio = { version = "0.2.22", features = ["rt-threaded"] }
@@ -78,7 +75,7 @@ arc-swap = "0.4.6"
 notify = "4.0.15"
 
 # Date and Time utilities
-chrono = { version = "0.4.11", features = ["serde"] }
+chrono = { version = "0.4.11", features = ["serde"] } 
 time = "0.1" # TODO: Remove once `iron` is removed
 
 [dependencies.postgres]

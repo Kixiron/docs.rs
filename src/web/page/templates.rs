@@ -20,7 +20,7 @@ use walkdir::WalkDir;
 const TEMPLATES_DIRECTORY: &str = "templates";
 
 /// Holds all data relevant to templating
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub(crate) struct TemplateData {
     /// The actual templates, stored in an `ArcSwap` so that they're hot-swappable
     // TODO: Conditional compilation so it's not always wrapped, the `ArcSwap` is unneeded overhead for prod

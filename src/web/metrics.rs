@@ -1,26 +1,26 @@
-use crate::db::Pool;
-use crate::BuildQueue;
-use crate::Metrics;
+use crate::{db::Pool, web::error::DocsrsResult, BuildQueue, Metrics};
 use iron::headers::ContentType;
 use iron::prelude::*;
 use iron::status::Status;
 use prometheus::{Encoder, HistogramVec, TextEncoder};
 use std::time::{Duration, Instant};
+use warp::http::{header::CONTENT_TYPE, Response, StatusCode};
 
-pub fn metrics_handler(req: &mut Request) -> IronResult<Response> {
-    let metrics = extension!(req, Metrics);
-    let pool = extension!(req, Pool);
-    let queue = extension!(req, BuildQueue);
-
+pub fn metrics_handler(
+    metrics: Metrics,
+    pool: Pool,
+    queue: BuildQueue,
+) -> DocsrsResult<Response<Vec<u8>>> {
     let mut buffer = Vec::new();
-    let families = ctry!(req, metrics.gather(pool, &*queue));
-    ctry!(req, TextEncoder::new().encode(&families, &mut buffer));
+    let families = metrics.gather(pool, &*queue)?;
+    TextEncoder::new().encode(&families, &mut buffer)?;
 
-    let mut resp = Response::with(buffer);
-    resp.status = Some(Status::Ok);
-    resp.headers.set(ContentType::plaintext());
+    let response = Response::builder()
+        .status(StatusCode::OK)
+        .header(CONTENT_TYPE, "text/plain; charset=utf-8")
+        .body(buffer)?;
 
-    Ok(resp)
+    Ok(response)
 }
 
 /// Converts a `Duration` to seconds, used by prometheus internally
@@ -45,7 +45,7 @@ impl RequestRecorder {
 }
 
 impl iron::Handler for RequestRecorder {
-    fn handle(&self, request: &mut Request) -> IronResult<Response> {
+    fn handle(&self, request: &mut Request) -> IronResult<Response<()>> {
         let start = Instant::now();
         let result = self.handler.handle(request);
         let resp_time = duration_to_seconds(start.elapsed());

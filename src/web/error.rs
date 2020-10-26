@@ -4,7 +4,31 @@ use crate::{
 };
 use failure::Fail;
 use iron::{status::Status, Handler, IronError, IronResult, Request, Response};
-use std::{error::Error, fmt};
+use std::{borrow::Cow, error::Error, fmt, io};
+
+pub type DocsrsResult<T> = Result<T, DocsrsError>;
+
+pub enum DocsrsError {
+    Template {
+        template_name: Cow<'static, str>,
+        error: tera::Error,
+    },
+    Pool(PoolError),
+    IO(io::Error),
+    ResourceNotFound,
+}
+
+impl From<PoolError> for DocsrsError {
+    fn from(error: PoolError) -> Self {
+        Self::Pool(error)
+    }
+}
+
+impl From<io::Error> for DocsrsError {
+    fn from(error: io::Error) -> Self {
+        Self::IO(error)
+    }
+}
 
 #[derive(Debug, Copy, Clone)]
 pub enum Nope {
